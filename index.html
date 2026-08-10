@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IMS Control Center</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- External Modular CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+    <!-- SIDEBAR / LEFT PANEL -->
+<div class="sidebar">
+    <div class="logo-container">
+        <img src="ims_logo.png" alt="IMS Logo" class="sidebar-logo-img">
+    </div>
+    
+    <!-- Navigation Menu -->
+    <div class="nav-menu">
+        <div class="nav-item active" data-tab="dashboard"><i class="fa-solid fa-house"></i> Dashboard</div>
+        <div class="nav-item" data-tab="computers"><i class="fa-solid fa-desktop"></i> Computers</div>
+        <div class="nav-item" onclick="openShutdownModal()"><i class="fa-solid fa-power-off"></i> Shutdown</div>
+        <div class="nav-item" onclick="openRestartModal()"><i class="fa-solid fa-rotate-right"></i> Restart</div>
+        <div class="nav-item" onclick="openStartVncModal()"><i class="fa-solid fa-display"></i> Start VNC</div>
+        <div class="nav-item" onclick="openStopVncModal()"><i class="fa-solid fa-circle-stop"></i> Stop VNC</div>
+        <div class="nav-item" onclick="openWolModal()"><i class="fa-solid fa-bolt"></i> Wake on LAN</div>
+        <div class="nav-item" onclick="openPowershellModal()"><i class="fa-solid fa-terminal"></i> PowerShell</div>
+        <div class="nav-item" onclick="openSettingsModal()"><i class="fa-solid fa-gear"></i> Settings</div>
+        <div class="nav-item" onclick="openCmdModal()"><i class="fa-solid fa-code"></i> CMD</div>
+        <div class="nav-item" onclick="openWebsiteModal()"><i class="fa-solid fa-globe"></i> Website</div>
+        <div class="nav-item" onclick="openCopyFilesModal()"><i class="fa-solid fa-copy"></i> Copy Files</div>
+        <div class="nav-item" onclick="openSendMsgModal()"><i class="fa-solid fa-envelope"></i> Send Message</div>
+    </div>
+
+    <div class="sidebar-footer">
+        <img src="ims_logo.png" alt="IMS Logo" class="logo-small">
+        <h4>Institute of<br>Management Sciences</h4>
+        <p>Smart Management, Secure Control</p>
+    </div>
+</div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+        <!-- HEADER BANNER -->
+        <div class="header-banner-container">
+            <div class="header-banner">
+                <div class="header-left">
+                    <img src="ims_logo.png" alt="IMS Logo" class="header-logo-img">
+                    <div class="header-titles">
+                        <h1>IMS CONTROL CENTER</h1>
+                        <p>MANAGE &bull; MONITOR &bull; CONTROL</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="user-avatar-circle"><i class="fa-solid fa-user"></i></div>
+                    <div class="user-details">
+                        <h3>DESKTOP-KQMKRMC \Admin</h3>
+                        <p><span class="status-dot"></span>Online</p>
+                    </div>
+                    <div class="divider-line"></div>
+                   <div class="user-details" style="text-align:left;">
+    <h3 id="liveClock">09:18:42 AM</h3>
+    <p id="liveDate">Tuesday, 04 August 2026</p> <!-- Yahan id="liveDate" add kar dein -->
+</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT BODY -->
+        <div class="content-body">
+
+            <!-- DASHBOARD TAB VIEW -->
+            <div id="view-dashboard" class="tab-view active-view">
+                <!-- STATS ROW -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-desktop"></i></div>
+                        <div class="stat-info"><h2 id="totalComputers">0</h2><p>Total Computers</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-desktop"></i></div>
+                        <div class="stat-info"><h2 id="onlineComputers" style="color:#16a34a">0</h2><p>Online</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fee2e2; color:#dc2626;"><i class="fa-solid fa-desktop"></i></div>
+                        <div class="stat-info"><h2 id="offlineComputers" style="color:#dc2626">0</h2><p>Offline</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#dbeafe; color:#2563eb;"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info"><h2 style="color:#2563eb">1</h2><p>Active User</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="stat-info"><h2 id="networkPercentage" style="color:#d97706">0%</h2><p>Network Status</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-wifi"></i></div>
+                        <div class="stat-info"><h2 style="font-size:13px; color:#16a34a">Lab Network</h2><p id="labNetwork">Loading...</p></div>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div class="section-title" style="margin-top:12px;"><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Quick Actions</div>
+               <div class="actions-row">
+    <button class="action-btn" style="background:#dc2626;" onclick="openShutdownModal()"><i class="fa-solid fa-power-off"></i> Shutdown All</button>
+    <button class="action-btn" style="background:#16a34a;" onclick="openRestartModal()"><i class="fa-solid fa-rotate-right"></i> Restart All</button>
+    <button class="action-btn" style="background:#2563eb;" onclick="openStartVncModal()"><i class="fa-solid fa-display"></i> Start VNC</button>
+    <button class="action-btn" style="background:#ea580c;" onclick="openStopVncModal()"><i class="fa-solid fa-circle-stop"></i> Stop VNC</button>
+    <button class="action-btn" style="background:#7c3aed;" onclick="openWolModal()"><i class="fa-solid fa-bolt"></i> Wake on LAN</button>
+    <button class="action-btn" style="background:#0d9488;" onclick="openCmdModal()"><i class="fa-solid fa-terminal"></i> Open CMD</button>
+    <button class="action-btn" style="background:#475569;" onclick="openWebsiteModal()"><i class="fa-solid fa-globe"></i> Open Website</button>
+</div>
+
+                <!-- MIDDLE DASHBOARD -->
+                <div class="dashboard-mid" style="margin-top:12px;">
+                    <!-- 3D COMPUTER STATUS BOX -->
+                    <div class="card-box">
+                        <div class="box-header">
+                            <h3><i class="fa-solid fa-chart-pie" style="color:#0052cc;"></i> Computer Status</h3>
+                            <button class="btn-view-all" onclick="openPCModal()">View All</button>
+                        </div>
+                        <div class="chart-container">
+                            <div class="donut-wrapper">
+                                <svg class="donut-chart" viewBox="0 0 36 36">
+                                    <defs>
+                                        <linearGradient id="green3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#22c55e"/>
+                                            <stop offset="100%" stop-color="#15803d"/>
+                                        </linearGradient>
+                                        <linearGradient id="red3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#ef4444"/>
+                                            <stop offset="100%" stop-color="#b91c1c"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="url(#red3D)" stroke-width="4.5"/>
+                                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="url(#green3D)" stroke-width="4.5" stroke-dasharray="67, 100" stroke-linecap="round"/>
+                                </svg>
+                                <div class="donut-center-3d">
+                                    <span class="percentage" id="circlePercent">0%</span>
+                                    <span class="sub-label">ONLINE</span>
+                                </div>
+                            </div>
+                            <div class="legend-box">
+                                <div class="legend-item-3d">
+                                    <span class="legend-bullet-3d" style="background:#22c55e; color:#22c55e;"></span>
+                                    <span>Online: <strong id="circleOnline" style="color:#16a34a;">0</strong></span>
+                                </div>
+                                <div class="legend-item-3d">
+                                    <span class="legend-bullet-3d" style="background:#ef4444; color:#ef4444;"></span>
+                                    <span>Offline: <strong id="circleOffline" style="color:#dc2626;">0</strong></span>
+                                </div>
+                                <div class="total-badge-3d">
+                                    Total PCs: <strong id="circleTotal">0</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                   <!-- ACTIVITY TABLE -->
+<div class="card-box">
+    <div class="box-header">
+        <h3><i class="fa-solid fa-clock-rotate-left" style="color:#0052cc;"></i> Recent Activity</h3>
+        <button class="btn-view-all" onclick="openRecentActivityModal()">View All</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Time</th><th>Computer</th><th>Action</th><th>Status</th></tr>
+            </thead>
+            <tbody id="recentActivityBody">
+                <!-- Dynamic actions yahan load hongi -->
+            </tbody>
+        </table>
+    </div>
+</div>
+                </div>
+
+                <!-- BOTTOM SHIELD BANNER -->
+                <div class="bottom-info-banner" style="margin-top:12px;">
+                    <div class="banner-left">
+                        <svg class="shield-svg-icon" viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="shieldBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#0066ff"/>
+                                    <stop offset="100%" stop-color="#003d99"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M50 0 C75 12, 95 12, 95 22 C95 72, 60 102, 50 115 C40 102, 5 72, 5 22 C5 12, 25 12, 50 0 Z" fill="url(#shieldBg)"/>
+                            <path d="M30 52 L45 67 L72 38" fill="none" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="banner-text">
+                            <h3>IMS Control Center</h3>
+                            <p>A complete solution for managing and monitoring institute computer labs.</p>
+                        </div>
+                    </div>
+                    <div class="banner-features">
+                        <span><i class="fa-solid fa-check"></i> Real-time Computer Monitoring</span>
+                        <span><i class="fa-solid fa-check"></i> Power Control</span>
+                        <span><i class="fa-solid fa-check"></i> Remote Management (VNC / CMD)</span>
+                        <span><i class="fa-solid fa-check"></i> File Management</span>
+                        <span><i class="fa-solid fa-check"></i> Wake on LAN Support</span>
+                        <span><i class="fa-solid fa-check"></i> Secure & Reliable</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPUTERS TAB VIEW -->
+            <div id="view-computers" class="tab-view" style="display: none;">
+                <div class="computers-header">
+                    <h2><i class="fa-solid fa-desktop"></i> Lab Computers</h2>
+                    <div class="header-controls">
+                        <!-- Search Box -->
+                        <div class="search-box">
+                            <input type="text" id="pcSearchInput" placeholder="Search PC name or IP..." onkeyup="filterPCCards()">
+                        </div>
+                        <!-- View Selector Dropdown -->
+                        <div class="view-toggle">
+                            <select id="viewTypeSelect" onchange="togglePCView(this.value)">
+                                <option value="grid">Grid View</option>
+                                <option value="list">List View</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRID VIEW CONTAINER -->
+                <div class="pc-grid-container" id="pcGridContainer">
+                    <!-- Dynamic Cards Load Here -->
+                </div>
+
+                <!-- LIST VIEW CONTAINER -->
+                <div class="pc-list-container" id="pcListContainer" style="display: none;">
+                    <table class="pc-custom-table">
+                        <thead>
+                            <tr>
+                                <th>Computer Name</th>
+                                <th>IP Address</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pcListTableBody">
+                            <!-- Dynamic Rows Load Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER BAR -->
+        <div class="system-footer">
+            <div><span style="color:#22c55e">●</span> System Ready &nbsp;|&nbsp; IMS Control Center – Version 5.0</div>
+            <div><i class="fa-solid fa-lock"></i> Secure Network Management</div>
+        </div>
+    </div>
+
+
+    <!-- COMPUTER LIST MODAL POPUP -->
+    <div id="pcModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-desktop"></i> All Lab Computers List</h3>
+                <span class="close-btn" onclick="closePCModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <table class="pc-table">
+                    <thead>
+                        <tr>
+                            <th>PC Name</th>
+                            <th>IP Address</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalPcTableBody">
+                        <!-- Dynamic list rendering -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADVANCED SHUTDOWN MANAGEMENT MODAL -->
+    <div id="shutdownModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 600px; width: 95%;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);">
+                <h3><i class="fa-solid fa-power-off"></i> Advanced Shutdown Management</h3>
+                <span class="close-btn" onclick="closeShutdownModal()">&times;</span>
+            </div>
+            <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Target Scope:</label>
+                    <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #475569;">
+                        <label><input type="radio" name="shutdownScope" value="all" onclick="toggleShutdownScope('all')" checked> All PCs</label>
+                        <label><input type="radio" name="shutdownScope" value="single" onclick="toggleShutdownScope('single')"> Single PC / IP</label>
+                        <label><input type="radio" name="shutdownScope" value="selected" onclick="toggleShutdownScope('selected')"> Selected PCs Only</label>
+                    </div>
+                </div>
+
+                <div id="shutdownSingleContainer" style="margin-bottom: 15px; display: none;">
+                    <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Computer Name or IP:</label>
+                    <input type="text" id="shutdownTargetInput" placeholder="e.g. PC-LAB-01 or 192.168.1.50" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+                </div>
+
+                <div id="shutdownSelectedContainer" style="margin-bottom: 15px; display: none; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #f8fafc;">
+                    <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 8px;">Select Target Computers:</label>
+                    <div id="shutdownPCListCheckboxes" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Delay Time (Seconds):</label>
+                        <input type="number" id="shutdownDelayInput" value="0" min="0" max="300" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: flex-end;">
+                        <label style="font-size: 13px; font-weight: 700; color: #dc2626; display: flex; align-items: center; gap: 8px; cursor: pointer; padding-bottom: 8px;">
+                            <input type="checkbox" id="shutdownForceCheck" checked style="width: 16px; height: 16px;"> Force close apps
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="executeAdvancedShutdown()" style="width: 100%; background: #dc2626; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">
+                    <i class="fa-solid fa-power-off"></i> Execute Shutdown Command
+                </button>
+                <div id="shutdownResponseMsg" style="font-size: 12px; font-weight: 700; margin-top: 12px; text-align: center;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADVANCED RESTART MANAGEMENT MODAL -->
+    <div id="restartModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 600px; width: 95%;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
+                <h3><i class="fa-solid fa-rotate-right"></i> Advanced Restart Management</h3>
+                <span class="close-btn" onclick="closeRestartModal()">&times;</span>
+            </div>
+            <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Target Scope:</label>
+                    <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #475569;">
+                        <label><input type="radio" name="restartScope" value="all" onclick="toggleRestartScope('all')" checked> All PCs</label>
+                        <label><input type="radio" name="restartScope" value="single" onclick="toggleRestartScope('single')"> Single PC / IP</label>
+                        <label><input type="radio" name="restartScope" value="selected" onclick="toggleRestartScope('selected')"> Selected PCs Only</label>
+                    </div>
+                </div>
+
+                <div id="restartSingleContainer" style="margin-bottom: 15px; display: none;">
+                    <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Computer Name or IP:</label>
+                    <input type="text" id="restartTargetInput" placeholder="e.g. PC-LAB-01 or 192.168.1.50" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+                </div>
+
+                <div id="restartSelectedContainer" style="margin-bottom: 15px; display: none; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #f8fafc;">
+                    <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 8px;">Select Target Computers:</label>
+                    <div id="restartPCListCheckboxes" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Delay Time (Seconds):</label>
+                        <input type="number" id="restartDelayInput" value="0" min="0" max="300" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: flex-end;">
+                        <label style="font-size: 13px; font-weight: 700; color: #16a34a; display: flex; align-items: center; gap: 8px; cursor: pointer; padding-bottom: 8px;">
+                            <input type="checkbox" id="restartForceCheck" checked style="width: 16px; height: 16px;"> Force close apps
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="executeAdvancedRestart()" style="width: 100%; background: #16a34a; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">
+                    <i class="fa-solid fa-rotate-right"></i> Execute Restart Command
+                </button>
+                <div id="restartResponseMsg" style="font-size: 12px; font-weight: 700; margin-top: 12px; text-align: center;"></div>
+            </div>
+        </div>
+    </div>
+<!-- ADVANCED START VNC MANAGEMENT MODAL -->
+<div id="startVncModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);">
+            <h3><i class="fa-solid fa-display"></i> Start VNC Server</h3>
+            <span class="close-btn" onclick="closeStartVncModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Target Scope:</label>
+                <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #475569;">
+                    <label><input type="radio" name="startVncScope" value="all" onclick="toggleStartVncScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="startVncScope" value="single" onclick="toggleStartVncScope('single')"> Single PC / IP</label>
+                    <label><input type="radio" name="startVncScope" value="selected" onclick="toggleStartVncScope('selected')"> Selected PCs Only</label>
+                </div>
+            </div>
+
+            <div id="startVncSingleContainer" style="margin-bottom: 15px; display: none;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Computer Name or IP:</label>
+                <input type="text" id="startVncTargetInput" placeholder="e.g. PC-LAB-01 or 192.168.1.50" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+            </div>
+
+            <div id="startVncSelectedContainer" style="margin-bottom: 15px; display: none; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #f8fafc;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 8px;">Select Target Computers:</label>
+                <div id="startVncPCListCheckboxes" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
+
+            <button onclick="executeStartVnc()" style="width: 100%; background: #2563eb; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">
+                <i class="fa-solid fa-display"></i> Execute Start VNC
+            </button>
+            <div id="startVncResponseMsg" style="font-size: 12px; font-weight: 700; margin-top: 12px; text-align: center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ADVANCED STOP VNC MANAGEMENT MODAL -->
+<div id="stopVncModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);">
+            <h3><i class="fa-solid fa-circle-stop"></i> Stop VNC Server</h3>
+            <span class="close-btn" onclick="closeStopVncModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Target Scope:</label>
+                <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #475569;">
+                    <label><input type="radio" name="stopVncScope" value="all" onclick="toggleStopVncScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="stopVncScope" value="single" onclick="toggleStopVncScope('single')"> Single PC / IP</label>
+                    <label><input type="radio" name="stopVncScope" value="selected" onclick="toggleStopVncScope('selected')"> Selected PCs Only</label>
+                </div>
+            </div>
+
+            <div id="stopVncSingleContainer" style="margin-bottom: 15px; display: none;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Computer Name or IP:</label>
+                <input type="text" id="stopVncTargetInput" placeholder="e.g. PC-LAB-01 or 192.168.1.50" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+            </div>
+
+            <div id="stopVncSelectedContainer" style="margin-bottom: 15px; display: none; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #f8fafc;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 8px;">Select Target Computers:</label>
+                <div id="stopVncPCListCheckboxes" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
+
+            <button onclick="executeStopVnc()" style="width: 100%; background: #ea580c; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">
+                <i class="fa-solid fa-circle-stop"></i> Execute Stop VNC
+            </button>
+            <div id="stopVncResponseMsg" style="font-size: 12px; font-weight: 700; margin-top: 12px; text-align: center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ADVANCED WAKE ON LAN (WOL) MODAL -->
+<div id="wolModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
+            <h3><i class="fa-solid fa-bolt"></i> Wake on LAN (WOL)</h3>
+            <span class="close-btn" onclick="closeWolModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Target Scope:</label>
+                <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #475569;">
+                    <label><input type="radio" name="wolScope" value="all" onclick="toggleWolScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="wolScope" value="single" onclick="toggleWolScope('single')"> Single PC / MAC</label>
+                    <label><input type="radio" name="wolScope" value="selected" onclick="toggleWolScope('selected')"> Selected PCs Only</label>
+                </div>
+            </div>
+
+            <div id="wolSingleContainer" style="margin-bottom: 15px; display: none;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">MAC Address or PC Name:</label>
+                <input type="text" id="wolTargetInput" placeholder="e.g. AA:BB:CC:DD:EE:FF or PC-LAB-01" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+            </div>
+
+            <div id="wolSelectedContainer" style="margin-bottom: 15px; display: none; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #f8fafc;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 8px;">Select Target Computers:</label>
+                <div id="wolPCListCheckboxes" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
+
+            <button onclick="executeWol()" style="width: 100%; background: #7c3aed; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">
+                <i class="fa-solid fa-bolt"></i> Send Magic Packet (WOL)
+            </button>
+            <div id="wolResponseMsg" style="font-size: 12px; font-weight: 700; margin-top: 12px; text-align: center;"></div>
+        </div>
+    </div>
+</div>
+<!-- POWERSELL MODAL -->
+<div id="powershellModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%);">
+            <h3><i class="fa-solid fa-terminal"></i> Remote PowerShell Execution</h3>
+            <span class="close-btn" onclick="closePowershellModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Target Scope:</label>
+                <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #475569;">
+                    <label><input type="radio" name="psScope" value="all" onclick="togglePsScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="psScope" value="single" onclick="togglePsScope('single')"> Single PC</label>
+                    <label><input type="radio" name="psScope" value="selected" onclick="togglePsScope('selected')"> Selected PCs</label>
+                </div>
+            </div>
+            <div id="psSingleContainer" style="margin-bottom: 15px; display: none;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Computer Name:</label>
+                <input type="text" id="psTargetInput" placeholder="e.g. PC-LAB-01" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+            </div>
+            <div id="psSelectedContainer" style="margin-bottom: 15px; display: none; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #f8fafc;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 8px;">Select Target Computers:</label>
+                <div id="psPCListCheckboxes" style="max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">PowerShell Command:</label>
+                <textarea id="psCommandInput" rows="3" placeholder="Enter script or command..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;"></textarea>
+            </div>
+            <button onclick="executePowershell()" style="width: 100%; background: #0f172a; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">Execute PowerShell</button>
+            <div id="psResponseMsg" style="font-size: 12px; font-weight: 700; margin-top: 10px; text-align: center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- CMD MODAL -->
+<div id="cmdModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
+            <h3><i class="fa-solid fa-code"></i> Remote CMD Execution</h3>
+            <span class="close-btn" onclick="closeCmdModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Target Scope:</label>
+                <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #475569;">
+                    <label><input type="radio" name="cmdScope" value="all" onclick="toggleCmdScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="cmdScope" value="single" onclick="toggleCmdScope('single')"> Single PC</label>
+                    <label><input type="radio" name="cmdScope" value="selected" onclick="toggleCmdScope('selected')"> Selected PCs</label>
+                </div>
+            </div>
+            <div id="cmdSingleContainer" style="margin-bottom: 15px; display: none;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">Computer Name / IP:</label>
+                <input type="text" id="cmdTargetInput" placeholder="e.g. GPULAB-pc01.ims.edu.pk" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+            </div>
+            <div id="cmdSelectedContainer" style="margin-bottom:15px; display:none; border:1px solid #cbd5e1; border-radius:8px; padding:10px; background:#f8fafc;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:8px;">Select Target Computers:</label>
+                <div id="cmdPCListCheckboxes" style="max-height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;"></div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;">CMD Command:</label>
+                <input type="text" id="cmdCommandInput" placeholder="e.g. ipconfig /all" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+            </div>
+            <button onclick="executeCmd()" style="width: 100%; background: #0d9488; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">Execute CMD</button>
+            <div id="cmdResponseMsg" style="font-size: 12px; font-weight: 700; margin-top: 10px; text-align: center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- WEBSITE MODAL -->
+<div id="websiteModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #475569 0%, #334155 100%);">
+            <h3><i class="fa-solid fa-globe"></i> Open Website on Remote PCs</h3>
+            <span class="close-btn" onclick="closeWebsiteModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Target Scope:</label>
+                <div style="display:flex; gap:15px; font-size:13px; font-weight:600; color:#475569;">
+                    <label><input type="radio" name="websiteScope" value="all" onclick="toggleWebsiteScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="websiteScope" value="single" onclick="toggleWebsiteScope('single')"> Single PC</label>
+                    <label><input type="radio" name="websiteScope" value="selected" onclick="toggleWebsiteScope('selected')"> Selected PCs</label>
+                </div>
+            </div>
+            <div id="websiteSingleContainer" style="margin-bottom:15px; display:none;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Computer Name / IP:</label>
+                <input type="text" id="websiteTargetInput" placeholder="GPULAB-pc01.ims.edu.pk" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; outline:none; font-size:13px;">
+            </div>
+            <div id="websiteSelectedContainer" style="margin-bottom:15px; display:none; border:1px solid #cbd5e1; border-radius:8px; padding:10px; background:#f8fafc;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:8px;">Select Target Computers:</label>
+                <div id="websitePCListCheckboxes" style="max-height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;"></div>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Website URL:</label>
+                <input type="text" id="websiteUrlInput" placeholder="https://ims.edu.pk" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; outline:none; font-size:13px;">
+            </div>
+            <button onclick="executeOpenWebsite()" style="width:100%; background:#475569; color:white; border:none; padding:10px; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer;">Launch Website</button>
+            <div id="websiteResponseMsg" style="font-size:12px; font-weight:700; margin-top:10px; text-align:center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- COPY FILES MODAL -->
+
+<div id="copyFilesModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+            <h3><i class="fa-solid fa-copy"></i> Copy Files to Lab PCs</h3>
+            <span class="close-btn" onclick="closeCopyFilesModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height:75vh; overflow-y:auto;">
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Target Scope:</label>
+                <div style="display:flex; gap:15px; font-size:13px; font-weight:600; color:#475569;">
+                    <label><input type="radio" name="copyScope" value="all" onclick="toggleCopyScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="copyScope" value="single" onclick="toggleCopyScope('single')"> Single PC</label>
+                    <label><input type="radio" name="copyScope" value="selected" onclick="toggleCopyScope('selected')"> Selected PCs</label>
+                </div>
+            </div>
+            <div id="copySingleContainer" style="margin-bottom:15px; display:none;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Computer Name / IP:</label>
+                <input type="text" id="copyTargetInput" placeholder="GPULAB-pc01.ims.edu.pk" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; outline:none; font-size:13px;">
+            </div>
+            <div id="copySelectedContainer" style="margin-bottom:15px; display:none; border:1px solid #cbd5e1; border-radius:8px; padding:10px; background:#f8fafc;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:8px;">Select Target Computers:</label>
+                <div id="copyPCListCheckboxes" style="max-height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;"></div>
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Source File Path (Local):</label>
+                <input type="text" id="sourcePathInput" placeholder="C:\path\to\file.txt" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; outline:none; font-size:13px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Destination Path (Remote):</label>
+                <input type="text" id="destPathInput" placeholder="C:\Users\Public\Desktop" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; outline:none; font-size:13px;">
+            </div>
+            <button onclick="executeCopyFiles()" style="width:100%; background:#2563eb; color:white; border:none; padding:10px; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer;">Copy Files</button>
+            <div id="copyFilesResponseMsg" style="font-size:12px; font-weight:700; margin-top:10px; text-align:center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- SEND MESSAGE MODAL -->
+
+<div id="sendMsgModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+            <h3><i class="fa-solid fa-envelope"></i> Send Message to Lab PCs</h3>
+            <span class="close-btn" onclick="closeSendMsgModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height:75vh; overflow-y:auto;">
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Target Scope:</label>
+                <div style="display:flex; gap:15px; font-size:13px; font-weight:600; color:#475569;">
+                    <label><input type="radio" name="msgScope" value="all" onclick="toggleMsgScope('all')" checked> All PCs</label>
+                    <label><input type="radio" name="msgScope" value="single" onclick="toggleMsgScope('single')"> Single PC</label>
+                    <label><input type="radio" name="msgScope" value="selected" onclick="toggleMsgScope('selected')"> Selected PCs</label>
+                </div>
+            </div>
+            <div id="msgSingleContainer" style="margin-bottom:15px; display:none;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Computer Name / IP:</label>
+                <input type="text" id="msgTargetInput" placeholder="GPULAB-pc01.ims.edu.pk" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; outline:none; font-size:13px;">
+            </div>
+            <div id="msgSelectedContainer" style="margin-bottom:15px; display:none; border:1px solid #cbd5e1; border-radius:8px; padding:10px; background:#f8fafc;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:8px;">Select Target Computers:</label>
+                <div id="msgPCListCheckboxes" style="max-height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;"></div>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:700; font-size:13px; color:#1e293b; display:block; margin-bottom:6px;">Message Text:</label>
+                <textarea id="broadcastMsgInput" rows="4" placeholder="Type your message here..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; outline:none; font-size:13px;"></textarea>
+            </div>
+            <button onclick="executeSendMsg()" style="width:100%; background:#0284c7; color:white; border:none; padding:10px; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer;">Send Message</button>
+            <div id="sendMsgResponseMsg" style="font-size:12px; font-weight:700; margin-top:10px; text-align:center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+
+<div id="settingsModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 500px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #334155 0%, #1e293b 100%);">
+            <h3><i class="fa-solid fa-gear"></i> System Settings</h3>
+            <span class="close-btn" onclick="closeSettingsModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 13px; color: #475569; margin-bottom: 15px;">Configure lab network configuration, default timeout, and admin privileges.</p>
+            <button onclick="closeSettingsModal()" style="width: 100%; background: #334155; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer;">Save Settings</button>
+        </div>
+    </div>
+</div>
+<!-- RECENT ACTIVITY MODAL -->
+<div id="recentActivityModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 650px; width: 95%;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> All Recent Activities</h3>
+            <span class="close-btn" onclick="closeRecentActivityModal()">&times;</span>
+        </div>
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+            <table class="pc-table">
+                <thead>
+                    <tr><th>Time</th><th>Computer</th><th>Action</th><th>Status</th></tr>
+                </thead>
+                <tbody id="allActivityModalBody">
+                    <!-- All activities list -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    <!-- External Modular JS Files -->
+    <script src="static/js/navigation.js"></script>
+    <script src="static/js/main.js"></script>
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        
+        // --- 1. Live Time Update ---
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12; 
+        const formattedHours = String(hours).padStart(2, '0');
+        
+        const timeString = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+        const clockElement = document.getElementById('liveClock');
+        if (clockElement) {
+            clockElement.innerText = timeString;
+        }
+
+        // --- 2. Live Date Update ---
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateString = now.toLocaleDateString('en-US', options); // Format: Wednesday, August 5, 2026
+        
+        const dateElement = document.getElementById('liveDate');
+        if (dateElement) {
+            dateElement.innerText = dateString;
+        }
+    }
+
+    // Har 1 second baad time aur date check karke update karega
+    setInterval(updateDateTime, 1000);
+    // Page load hote hi foran chalane ke liye
+    updateDateTime();
+</script>
+</body>
+</html>

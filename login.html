@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMS Control Center - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="static/css/login.css">
+    <style>
+        /* Rotating Glow Effect CSS */
+        .rotating-glow-wrapper {
+            position: relative;
+            display: inline-block;
+            border-radius: 50%;
+            padding: 4px;
+        }
+        .rotating-glow-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+            z-index: 1;
+            animation: rotateGlow 4s linear infinite;
+            filter: blur(4px);
+        }
+        .rotating-glow-wrapper img {
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper-root">
+        <!-- Left Branding / Info Panel (Logo Centered at Top) -->
+        <div class="brand-side-panel">
+            <div class="brand-top-header">
+                <div class="rotating-glow-wrapper">
+                    <img src="./ims_logo.png" alt="IMS Logo" style="width: 110px; height: 110px; border-radius: 50%; object-fit: contain; display: block; background: #0f172a;" onerror="this.style.display='none'; console.error('Logo image not found!');">
+                </div>
+                <h1>IMS CONTROL CENTER</h1>
+                <p>MANAGE • MONITOR • CONTROL</p>
+            </div>
+
+            <div class="system-features-list">
+                <span><i class="fa-solid fa-check"></i> Real-time Computer Monitoring</span>
+                <span><i class="fa-solid fa-check"></i> Remote Management & Control</span>
+                <span><i class="fa-solid fa-check"></i> Secure Network Gateway</span>
+            </div>
+
+            <div class="side-panel-footer">
+                &copy; <span id="current-year">2026</span> Institute of Management Sciences
+            </div>
+        </div>
+
+        <!-- Right Interactive Login Form Panel -->
+        <div class="form-side-panel">
+            <div class="top-status-header">
+                <div class="sys-ready-tag"><span class="pulse-dot"></span> System Ready</div>
+                <div class="live-clock-box">
+                    <i class="fa-regular fa-clock"></i> <span id="live-time">--:--:-- --</span>
+                    <span class="dot-sep">|</span>
+                    <i class="fa-regular fa-calendar"></i> <span id="live-date">-- --- ----</span>
+                </div>
+            </div>
+
+            <div class="login-card-container">
+                <div class="card-header-text">
+                    <h2>Welcome Back</h2>
+                    <p>Enter your administrative credentials to continue</p>
+                </div>
+
+                <form onsubmit="handleLogin(event)" class="compact-login-form">
+                    <div class="input-group">
+                        <label>USERNAME</label>
+                        <div class="field-box">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" placeholder="Enter username" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>PASSWORD</label>
+                        <div class="field-box">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="passwordField" placeholder="Enter password" required>
+                            <i class="fa-regular fa-eye toggle-eye" onclick="togglePassword()"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>DOMAIN / HOST</label>
+                        <div class="field-box">
+                            <i class="fa-solid fa-network-wired"></i>
+                            <input type="text" id="domainField" value="IMS" placeholder="IMS or IMS.edu.pk" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions-row">
+                        <label class="remember-box">
+                            <input type="checkbox" checked> Save session
+                        </label>
+                        <a href="#" class="forgot-link">Forgot key?</a>
+                    </div>
+
+                    <button type="submit" class="login-submit-btn">
+                        <span>SIGN IN TO DASHBOARD</span>
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    </button>
+                </form>
+
+                <div class="security-badge-footer">
+                    <i class="fa-solid fa-shield-halved"></i> Secure Network Management Environment
+                </div>
+            </div>
+
+            <div class="mobile-footer-note">
+                Developed by IMS IT Department
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Real-Time Clock & Date
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-time').innerText = now.toLocaleTimeString();
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            document.getElementById('live-date').innerText = now.toLocaleDateString('en-GB', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Dynamic Year
+        document.getElementById('current-year').innerText = new Date().getFullYear();
+
+        // Toggle Password
+        function togglePassword() {
+            const passField = document.getElementById('passwordField');
+            passField.type = passField.type === 'password' ? 'text' : 'password';
+        }
+
+        // Login Handler with Credentials Check
+   async function handleLogin(e) {
+    e.preventDefault();
+
+    const usernameInput = document.querySelector('input[type="text"]').value.trim();
+    const passwordInput = document.getElementById('passwordField').value;
+    const domainInput = document.getElementById('domainField').value.trim() || 'IMS';
+
+    try {
+        const isAuthenticated =
+            await window.pywebview.api.verify_windows_login(
+                usernameInput,
+                passwordInput,
+                domainInput
+            );
+
+        // Never save the password in localStorage/sessionStorage.
+        if (isAuthenticated) {
+            localStorage.setItem("loginSuccess", "true");
+            window.location.href = "index.html";
+        } else {
+            localStorage.setItem("loginSuccess", "false");
+            alert("Invalid domain credentials or access denied.");
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("Authentication failed. Please check the username, password and domain.");
+    }
+}
+    </script>
+</body>
+</html>

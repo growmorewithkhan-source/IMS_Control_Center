@@ -1,0 +1,5 @@
+# Wake-on-LAN MAC address map
+# One entry per PC:
+# GPULAB-pc01.ims.edu.pk=AA-BB-CC-DD-EE-FF
+# Add the real MAC address for each PC. WOL cannot reliably wake a PC
+# if its MAC address is unknown.
