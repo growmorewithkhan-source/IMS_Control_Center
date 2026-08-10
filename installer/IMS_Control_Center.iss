@@ -2,10 +2,10 @@
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "Institute of Management Sciences"
 #define MyAppExeName "IMS Control Center.exe"
-#define MyAppId "{C8B42A8E-4F56-4A8B-9F7A-9C4D1F2A6B31}"
+#define MyAppId "{D3B0A0F5-1D9D-4B0B-8D4B-7B5A3F4C2E91}"
 
 [Setup]
-AppId={{#MyAppId}
+AppId={#MyAppId}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}

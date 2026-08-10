@@ -1,6 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 from pathlib import Path
-from PyInstaller.utils.hooks import collect_submodules
+from PyInstaller.utils.hooks import collect_submodules, collect_data_files
 
 ROOT = Path(SPECPATH).resolve()
 
@@ -14,7 +14,6 @@ try:
 except Exception:
     pass
 
-# Runtime files used by the HTML frontend and the application configuration.
 datas = [
     (str(ROOT / "login.html"), "."),
     (str(ROOT / "index.html"), "."),
@@ -25,6 +24,10 @@ datas = [
     (str(ROOT / "static"), "static"),
     (str(ROOT / "js"), "js"),
 ]
+try:
+    datas += collect_data_files("webview")
+except Exception:
+    pass
 
 a = Analysis(
     [str(ROOT / "main.py")],
@@ -61,11 +64,11 @@ exe = EXE(
     icon=str(ROOT / "ims_control_center.ico") if (ROOT / "ims_control_center.ico").exists() else None,
 )
 
-
 coll = COLLECT(
     exe,
     a.binaries,
     a.datas,
+    a.zipfiles,
     strip=False,
     upx=True,
     upx_exclude=[],
