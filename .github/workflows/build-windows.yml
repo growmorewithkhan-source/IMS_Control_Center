@@ -3,65 +3,199 @@ name: Build Windows Installer
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    name: Build Windows EXE and Installer
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
+
+      # --------------------------------------------------
+      # 1. Get project files
+      # --------------------------------------------------
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      # --------------------------------------------------
+      # 2. Install Python
+      # --------------------------------------------------
+      - name: Setup Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
-      - name: Install dependencies
+      # --------------------------------------------------
+      # 3. Install Python dependencies
+      # --------------------------------------------------
+      - name: Install Python dependencies
         shell: cmd
         run: |
           python -m pip install --upgrade pip
+
           if exist requirements.txt (
-            pip install -r requirements.txt
+              pip install -r requirements.txt
           )
+
           pip install pyinstaller pywebview
 
-      - name: Build application
+      # --------------------------------------------------
+      # 4. Check project files
+      # --------------------------------------------------
+      - name: Check project structure
+        shell: powershell
+        run: |
+          Write-Host "===== PROJECT FILES ====="
+          Get-ChildItem -Recurse -File |
+            Select-Object FullName
+
+      # --------------------------------------------------
+      # 5. Build EXE with PyInstaller
+      # --------------------------------------------------
+      - name: Build Windows application
         shell: cmd
         run: |
           if exist IMS_Control_Center.spec (
-            pyinstaller --clean --noconfirm IMS_Control_Center.spec
+              pyinstaller --clean --noconfirm IMS_Control_Center.spec
           ) else (
-            pyinstaller --clean --noconfirm --windowed --name "IMS Control Center" main.py
+              pyinstaller --clean --noconfirm --windowed --onedir --name "IMS Control Center" main.py
           )
 
+      # --------------------------------------------------
+      # 6. Verify PyInstaller output
+      # --------------------------------------------------
+      - name: Verify application build
+        shell: powershell
+        run: |
+          Write-Host "===== DIST DIRECTORY ====="
+
+          if (!(Test-Path "dist")) {
+              Write-Error "dist directory was not created."
+              exit 1
+          }
+
+          Get-ChildItem -Recurse "dist" |
+            Select-Object FullName
+
+          $exe = Get-ChildItem "dist" -Recurse -Filter "*.exe" |
+            Where-Object {
+              $_.Name -eq "IMS Control Center.exe"
+            } |
+            Select-Object -First 1
+
+          if (!$exe) {
+              Write-Error "IMS Control Center.exe was not found."
+              exit 1
+          }
+
+          Write-Host "EXE FOUND:"
+          Write-Host $exe.FullName
+
+      # --------------------------------------------------
+      # 7. Install Inno Setup
+      # --------------------------------------------------
       - name: Install Inno Setup
         shell: powershell
         run: |
           choco install innosetup --yes --no-progress
 
+      # --------------------------------------------------
+      # 8. Prepare installer directory
+      # --------------------------------------------------
+      - name: Prepare installer
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path "installer_output" | Out-Null
+
+          Write-Host "Installer directory prepared."
+
+      # --------------------------------------------------
+      # 9. Fix Inno Setup AppId automatically
+      # --------------------------------------------------
+      - name: Prepare Inno Setup script
+        shell: powershell
+        run: |
+
+          $iss = "installer\IMS_Control_Center.iss"
+
+          if (!(Test-Path $iss)) {
+              Write-Error "Installer script not found: $iss"
+              exit 1
+          }
+
+          $content = Get-Content $iss -Raw
+
+          # Make sure output goes to installer_output
+          $content = [regex]::Replace(
+              $content,
+              'OutputDir\s*=.*',
+              'OutputDir=..\installer_output'
+          )
+
+          # Correct Inno Setup AppId syntax.
+          # Literal GUID braces must be escaped as {{GUID}}.
+          $guid = "D3B0A0F5-1D9D-4B0B-8D4B-7B5A3F4C2E91"
+
+          $content = [regex]::Replace(
+              $content,
+              '(?m)^AppId\s*=.*$',
+              "AppId={{$guid}}"
+          )
+
+          Set-Content -Path $iss -Value $content -Encoding UTF8
+
+          Write-Host "===== FINAL INNO SETUP CONFIG ====="
+          Get-Content $iss
+
+      # --------------------------------------------------
+      # 10. Build installer
+      # --------------------------------------------------
       - name: Build installer
         shell: cmd
         run: |
-          if exist installer\IMS_Control_Center.iss (
-            "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\IMS_Control_Center.iss
-          ) else (
-            echo Inno Setup script not found
-            exit /b 1
-          )
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer\IMS_Control_Center.iss"
 
-      - name: Find installer
+      # --------------------------------------------------
+      # 11. Verify installer
+      # --------------------------------------------------
+      - name: Verify installer
         shell: powershell
         run: |
-          Get-ChildItem -Path . -Recurse -Filter "*.exe" |
-            Where-Object { $_.FullName -notmatch "\\dist\\" } |
-            Select-Object FullName
 
-      - name: Upload installer
+          Write-Host "===== INSTALLER OUTPUT ====="
+
+          if (!(Test-Path "installer_output")) {
+              Write-Error "installer_output directory does not exist."
+              exit 1
+          }
+
+          Get-ChildItem -Recurse "installer_output" |
+            Select-Object FullName, Length
+
+          $setup = Get-ChildItem "installer_output" -Filter "*.exe" |
+            Select-Object -First 1
+
+          if (!$setup) {
+              Write-Error "No installer EXE was created."
+              exit 1
+          }
+
+          Write-Host ""
+          Write-Host "======================================"
+          Write-Host "INSTALLER CREATED SUCCESSFULLY"
+          Write-Host $setup.FullName
+          Write-Host "======================================"
+
+      # --------------------------------------------------
+      # 12. Upload final installer
+      # --------------------------------------------------
+      - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
           name: IMS-Control-Center-Installer
-          path: |
-            installer_output/*.exe
-            output/*.exe
-            setup/*.exe
+          path: installer_output/*.exe
           if-no-files-found: error
+          retention-days: 30
